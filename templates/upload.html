@@ -1,64 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css"
-          rel="stylesheet">
-  </head>
-  <body>
-    <div class="container">
-      <div class="header">
-        <h3 class="text-muted">Uploaded files</h3>
-      </div>
-      <hr/>
-      <div>
-      This is a list of the files you just uploaded, click on them to load/download them
-      <ul>
-        {% for file in filenames %}
-          <li><a href="{{url_for('uploaded_file', filename=file)}}">{{file}}</a></li>
-
-          <audio controls>
-            <source src="horse.ogg" type="audio/ogg">
-            <source src={{file}} type="audio/mpeg">
-            Your browser does not support the audio element.
-          </audio>
-
-          <video width="400" controls>
-            <source src={{file}} type="video/mp4">
-            <source src={{file}} type="video/ogg">
-            <source src={{file}} type="video/x-matroska">
-            Your browser does not support HTML5 video.
-          </video>
-
-        {% endfor %}
-      </ul>
-      </div>
-      <div class="header">
-        <h3 class="text-muted">Code to manage a Upload</h3>
-      </div>
-      <hr/>    
-<pre>
-@app.route('/upload', methods=['POST'])
-def upload():
-    # Get the name of the uploaded file
-    #file = request.files['file']
-    uploaded_files = request.files.getlist("file[]")
-    filenames = []
-    for file in uploaded_files:
-        # Check if the file is one of the allowed types/extensions
-        if file and allowed_file(file.filename):
-            # Make the filename safe, remove unsupported chars
-            filename = secure_filename(file.filename)
-            # Move the file form the temporal folder to the upload
-            # folder we setup
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            filenames.append(filename)
-            # Redirect the user to the uploaded_file route, which
-            # will basicaly show on the browser the uploaded file
-    # Load an html page with a link to each uploaded file
-    return render_template('upload.html', filenames=filenames)
-</pre>
-      </div>
-    </div>
-  </body>
-</html>
- 
+<!doctype html>
+    <title>Upload new File</title>
+    <h1>Upload new File</h1>
+    <form action="" method=post enctype=multipart/form-data>
+      <p><input type=file name=file>
+      	<input type="text" name="info">
+         <input type=submit value=Upload></p>
+    </form>

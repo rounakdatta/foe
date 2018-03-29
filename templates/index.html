@@ -1,7 +1,54 @@
 <!doctype html>
-    <title>Upload new File</title>
-    <h1>Upload new File</h1>
-    <form action="" method=post enctype=multipart/form-data>
-      <p><input type=file name=file>
-         <input type=submit value=Upload>
-    </form>
+
+
+    <title>Home</title>
+    <h1>Home</h1>
+
+    <!--<video width="470" height="255" class="img-responsive" controls>
+    <source src="/uploads/friday.mp4" type="video/mp4">
+    </object>
+	</video>-->
+
+	{% for file in files %}
+    	<object align = "left" hspace="10">
+    		<h2 align = "middle">{{ file }}</h2>
+
+    		<center><div class="tooltip">Info
+  				<span class="tooltiptext">{{text[loop.index - 1]}}</span>
+			</div></center>
+
+    		<video width="410" height="255" class="img-responsive" controls>
+    		<source align="right" src="/uploads/{{file}}" type="video/mp4">
+    		</object>
+			</video>
+			
+			
+		</object>
+
+	{% endfor %}
+
+<style>
+.tooltip {
+    position: relative;
+    display: inline-block;
+    border-bottom: 1px dotted black;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+
+    /* Position the tooltip */
+    position: absolute;
+    z-index: 1;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+}
+</style>
