@@ -3,6 +3,7 @@ from flask import Flask, request, render_template, redirect, url_for, send_from_
 from werkzeug.utils import secure_filename
 import glob
 from uuid import uuid4
+import subprocess
 
 UPLOAD_FOLDER = './test'
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'mp3', 'mkv', 'mp4'])
@@ -19,12 +20,12 @@ def allowed_file(filename):
 def serve():
 
 	vfiles = []
-	for file in glob.glob("{}/*.mp4".format("test")):
+	for file in glob.glob("{}/*.mp4".format("ipfs")):
 		fname = file.split(os.sep)[-1]
 		vfiles.append(fname)
 
 	tfiles = []
-	for file in glob.glob("{}/*.txt".format("test")):
+	for file in glob.glob("{}/*.txt".format("ipfs")):
 		fcontent = open(file, 'r').read()
 		tfiles.append(fcontent)
 
@@ -49,12 +50,19 @@ def upload_file():
 			filename = secure_filename(file.filename)
 			file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
+			output = subprocess.check_output("ipfs add ./test/" + filename, shell=True)
+			ipfs_link = (output.decode("utf-8").split()[1])
+			print(ipfs_link)
+
 			info = request.form['info']
-			with open(UPLOAD_FOLDER + '/' + filename[:-4] + '.txt', 'w') as f:
+			with open('./ipfs' + '/' + ipfs_link + '.txt', 'w') as f:
 				f.write(info)
 
-			os.system("cd test; ls")
-			
+			#os.remove("./test/" + filename)
+			os.system("touch ./ipfs/" + ipfs_link + ".mp4")
+
+			#os.system("cd test; ipfs add " + filename)
+
 			return render_template('index.html')
 			#return redirect(url_for('uploaded_file', filename=filename))
 
